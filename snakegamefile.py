@@ -92,9 +92,13 @@ class snake(): # The Snake of the game
                 else: # not going to any edges
                     c.move(c.dirnx, c.dirny) # move cube in whatever direction its going
 
-    def reset(self, pos):
-        pass
-
+    def reset(self, pos): # resets all the snake data members to 0 or empty
+        self.head = cube(pos)
+        self.body = []
+        self.body.append(self.head)
+        self.turns = {}
+        self.dirnx = 0
+        self.dirny = 1
     def addCube(self):
         tail = self.body[-1] # last item in the list
         dx,dy = tail.dirnx, tail.dirny # set x and y directions
@@ -155,13 +159,19 @@ def randomSnack(rows, item):
 
     return (x,y) # generates snack on random pos
 
-def message_box(subject, content):
-    pass
+def message_box(subject, content): # gui msg box that will pop up while the game is running
+    root = tk.Tk()
+    root.attributes("-topmost", True) # Make this window go on top of everything else
+    root.withdraw() # hide box
+    messagebox.showinfo(subject, content) # show the strings that were passed into the parameters
+    try: # tries to destroy msg box until exit button is clicked which DOES destroy it
+        root.destroy()
+    except:
+        pass
+
 
 def main():
-
-
-    global width, rows, s, snack
+    global width, rows, s, snack # allows these vars to be used elsewhere in the program
     width = 500 # width for the game window
     rows = 20 # number of rows that the snake can move in
     win = pygame.display.set_mode((width, width)) # GAME WINDOW
@@ -180,11 +190,12 @@ def main():
         if(s.body[0].pos == snack.pos): # if the snakes head is touching the snack
             s.addCube() # add cube to the snake (making it longer)
             snack = cube(randomSnack(rows, s), color = (0,255,0)) # generate new snack
-
-        # START VIDEO AT 1:29:38
-        # LAST WORKED ON 1/9/21
-        # ALMOST DONE WITH THIS GAME
-
+        for x in range(len(s.body)):
+            if(s.body[x].pos in list(map(lambda z:z.pos, s.body[x+1:]))): # check if pos is in a list of all the positions after that works
+                print("Score : ", len(s.body))
+                message_box("You lost", "Play again....")
+                s.reset((10,10))
+                break
 
         redrawWindow(win) # call the redraw func
 
