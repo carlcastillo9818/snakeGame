@@ -8,7 +8,7 @@ class cube(): # the cubes in the game
     rows = 20
     w = 500
 
-
+    # adding this comment from my macbook air
 
 
     def __init__(self, start, dirnx = 1, dirny = 0, color = (255,0,0)):
